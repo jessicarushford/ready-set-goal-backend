@@ -15,7 +15,6 @@ const errorResponse = (error: any, res: any) => {
 //get all goals
 goalRouter.get("/", async (req, res) => {
   try {
-    const {} = req.query;
     const client = await getClient();
     const results = await client
       .db()
