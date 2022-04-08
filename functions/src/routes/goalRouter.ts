@@ -15,11 +15,15 @@ const errorResponse = (error: any, res: any) => {
 //get all goals
 goalRouter.get("/", async (req, res) => {
   try {
+    const { uid } = req.query;
+    const query: any = {
+      ...(uid ? { uid: uid as string } : {}),
+    };
     const client = await getClient();
     const results = await client
       .db()
       .collection<Goal>("goals")
-      .find()
+      .find(query)
       .toArray();
     res.json(results);
   } catch (err) {
@@ -28,7 +32,7 @@ goalRouter.get("/", async (req, res) => {
 });
 
 //get goals by id
-goalRouter.get("/:id", async (req, res) => {
+goalRouter.get("/details/:id", async (req, res) => {
   try {
     const id: string = req.params.id;
     const client = await getClient();
@@ -47,23 +51,20 @@ goalRouter.get("/:id", async (req, res) => {
 });
 
 //get by uid to see the goals in other user's page
-goalRouter.get("/:uid", async (req, res) => {
-  try {
-    const uid: string = req.params.uid;
-    const client = await getClient();
-    const result = await client
-      .db()
-      .collection<Goal>("goals")
-      .findOne({ uid: uid as string });
-    if (result) {
-      res.status(200).json(result);
-    } else {
-      res.status(404).send(`ID ${uid} was not found`);
-    }
-  } catch (err) {
-    errorResponse(err, res);
-  }
-});
+// goalRouter.get("/:uid", async (req, res) => {
+//   try {
+//     const uid: string = req.params.uid;
+//     const client = await getClient();
+//     const result = await client
+//       .db()
+//       .collection<Goal>("goals")
+//       .find({ uid: uid as string })
+//       .toArray();
+//     res.json(result);
+//   } catch (err) {
+//     errorResponse(err, res);
+//   }
+// });
 
 //add goal
 goalRouter.post("/", async (req, res) => {
