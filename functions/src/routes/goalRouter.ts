@@ -2,6 +2,7 @@ import express from "express";
 import { ObjectId } from "mongodb";
 import { getClient } from "../db";
 import Goal from "../models/Goal";
+import Query from "../models/Query";
 
 const goalRouter = express.Router();
 
@@ -16,7 +17,7 @@ const errorResponse = (error: any, res: any) => {
 goalRouter.get("/", async (req, res) => {
   try {
     const { uid } = req.query;
-    const query: any = {
+    const query: Query = {
       ...(uid ? { uid: uid as string } : {}),
     };
     const client = await getClient();
