@@ -14,6 +14,7 @@ const errorResponse = (error: any, res: any) => {
 //create APIs to hit data from Mongo
 
 //get all goals
+//using sort, get data in reverse order, with limit, only most recent 9 items will be shown in dashboard
 goalRouter.get("/", async (req, res) => {
   try {
     const { uid } = req.query;
@@ -25,6 +26,8 @@ goalRouter.get("/", async (req, res) => {
       .db()
       .collection<Goal>("goals")
       .find(query)
+      .sort({ _id: -1 })
+      .limit(9)
       .toArray();
     res.json(results);
   } catch (err) {
