@@ -142,4 +142,52 @@ goalRouter.put("/update/:id", async (req, res) => {
   }
 });
 
+// add a comment to a user's posts comment list
+// NEED TO TEST!
+goalRouter.put("/new-comment/:id", async (req, res) => {
+  try {
+    const id: string = req.params.id;
+    const newComment: Comment | undefined = req.body;
+    const client = await getClient();
+    const result = await client
+      .db()
+      .collection<Goal>("goals")
+      .updateOne(
+        { _id: new ObjectId(id) },
+        { $addToSet: { comments: newComment } }
+      );
+    if (result.modifiedCount) {
+      res.status(200).json(newComment);
+    } else {
+      res.status(404);
+      res.send(`ID ${id} was not found`);
+    }
+  } catch (err) {
+    errorResponse(err, res);
+  }
+});
+
+// delete a comment from a user's posts comment list
+// goalRouter.put("/delete-comment/:id", async (req, res) => {
+//   try {
+//     const id: string = req.params.id;
+//     const comment: Comment = req.body;
+//     const client = await getClient();
+//     const result = await client
+//       .db()
+//       .collection<Goal>("goals")
+//       .updateOne(
+//         { _id: new ObjectId(id) },
+//         { $pull: { comments: { id: comment.id } } }
+//       );
+//     if (result.modifiedCount) {
+//       res.sendStatus(204);
+//     } else {
+//       res.status(404).send(`UID ${id} was not found`);
+//     }
+//   } catch (err) {
+//     errorResponse(err, res);
+//   }
+// });
+
 export default goalRouter;
