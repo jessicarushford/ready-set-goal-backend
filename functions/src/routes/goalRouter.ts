@@ -35,7 +35,7 @@ goalRouter.get("/", async (req, res) => {
   }
 });
 
-//get goals by id
+//get a goal by id
 goalRouter.get("/details/:id", async (req, res) => {
   try {
     const id: string = req.params.id;
@@ -70,7 +70,7 @@ goalRouter.get("/details/:id", async (req, res) => {
 //   }
 // });
 
-//add goal
+//add a goal
 goalRouter.post("/", async (req, res) => {
   try {
     const newGoal: Goal = req.body;
@@ -93,6 +93,46 @@ goalRouter.delete("/:id", async (req, res) => {
       .deleteOne({ _id: new ObjectId(id) });
     if (result.deletedCount) {
       res.sendStatus(204);
+    } else {
+      res.status(404);
+      res.send(`ID ${id} was not found`);
+    }
+  } catch (err) {
+    errorResponse(err, res);
+  }
+});
+
+//update a goal with incrementing likes
+goalRouter.put("/:id", async (req, res) => {
+  try {
+    const id: string = req.params.id;
+    const client = await getClient();
+    const result = await client
+      .db()
+      .collection<Goal>("goals")
+      .updateOne({ _id: new ObjectId(id) }, { $inc: { likes: 1 } });
+    if (result.modifiedCount) {
+      res.status(200).json(result);
+    } else {
+      res.status(404);
+      res.send(`ID ${id} was not found`);
+    }
+  } catch (err) {
+    errorResponse(err, res);
+  }
+});
+
+//update a goal with decrementing likes
+goalRouter.put("/update/:id", async (req, res) => {
+  try {
+    const id: string = req.params.id;
+    const client = await getClient();
+    const result = await client
+      .db()
+      .collection<Goal>("goals")
+      .updateOne({ _id: new ObjectId(id) }, { $inc: { likes: -1 } });
+    if (result.modifiedCount) {
+      res.status(200).json(result);
     } else {
       res.status(404);
       res.send(`ID ${id} was not found`);
