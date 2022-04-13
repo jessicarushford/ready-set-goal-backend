@@ -2,6 +2,7 @@ import express from "express";
 import { ObjectId } from "mongodb";
 import { getClient } from "../db";
 import Goal from "../models/Goal";
+
 import Query from "../models/Query";
 
 const goalRouter = express.Router();
@@ -27,7 +28,7 @@ goalRouter.get("/", async (req, res) => {
       .collection<Goal>("goals")
       .find(query)
       .sort({ _id: -1 })
-      .limit(9)
+      // .limit(9)
       .toArray();
     res.json(results);
   } catch (err) {
@@ -102,15 +103,16 @@ goalRouter.delete("/:id", async (req, res) => {
   }
 });
 
-//update a goal with incrementing likes
-goalRouter.put("/:id", async (req, res) => {
+//update a goal with adding uid into likes
+goalRouter.put("/:id/likes/add/:uid", async (req, res) => {
   try {
     const id: string = req.params.id;
+    const uid: string = req.params.uid;
     const client = await getClient();
     const result = await client
       .db()
       .collection<Goal>("goals")
-      .updateOne({ _id: new ObjectId(id) }, { $inc: { likes: 1 } });
+      .updateOne({ _id: new ObjectId(id) }, { $push: { likes: uid } });
     if (result.modifiedCount) {
       res.status(200).json(result);
     } else {
@@ -122,15 +124,16 @@ goalRouter.put("/:id", async (req, res) => {
   }
 });
 
-//update a goal with decrementing likes
-goalRouter.put("/update/:id", async (req, res) => {
+//delete uid in likes when the user unliked.
+goalRouter.put("/:id/likes/delete/:uid", async (req, res) => {
   try {
     const id: string = req.params.id;
+    const uid: string = req.params.uid;
     const client = await getClient();
     const result = await client
       .db()
       .collection<Goal>("goals")
-      .updateOne({ _id: new ObjectId(id) }, { $inc: { likes: -1 } });
+      .updateOne({ _id: new ObjectId(id) }, { $pull: { likes: uid } });
     if (result.modifiedCount) {
       res.status(200).json(result);
     } else {
