@@ -60,19 +60,19 @@ userRouter.put("/:uid", async (req, res) => {
 });
 
 // delete a friend from a user's friend list
-userRouter.put("/update/:uid", async (req, res) => {
+userRouter.put("/:userUid/friends/:friendUid", async (req, res) => {
   try {
-    const uid: string = req.params.uid;
-    const friend: any = req.body;
+    const userUid: string = req.params.userUid;
+    const friendUid: string = req.params.friendUid;
     const client = await getClient();
     const result = await client
       .db()
       .collection<User>("users")
-      .updateOne({ uid }, { $pull: { friends: { uid: friend.uid } } });
+      .updateOne({ userUid }, { $pull: { friends: { uid: friendUid } } });
     if (result.modifiedCount) {
       res.sendStatus(204);
     } else {
-      res.status(404).send(`UID ${uid} was not found`);
+      res.status(404).send(`UID ${userUid} was not found`);
     }
   } catch (err) {
     errorResponse(err, res);
