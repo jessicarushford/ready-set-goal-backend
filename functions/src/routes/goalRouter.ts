@@ -146,7 +146,6 @@ goalRouter.put("/:id/likes/delete/:uid", async (req, res) => {
 });
 
 // add a comment to a user's posts comment list
-// NEED TO TEST!
 goalRouter.put("/new-comment/:id", async (req, res) => {
   try {
     const id: string = req.params.id;
