@@ -64,11 +64,13 @@ userRouter.put("/:userUid/friends/:friendUid", async (req, res) => {
   try {
     const userUid: string = req.params.userUid;
     const friendUid: string = req.params.friendUid;
+    console.log(userUid, friendUid);
     const client = await getClient();
     const result = await client
       .db()
       .collection<User>("users")
-      .updateOne({ userUid }, { $pull: { friends: { uid: friendUid } } });
+      .updateOne({ uid: userUid }, { $pull: { friends: { uid: friendUid } } });
+    console.log(result);
     if (result.modifiedCount) {
       res.sendStatus(204);
     } else {
