@@ -8,6 +8,9 @@ export default interface Goal {
   goalText: string;
   category: string;
   date: string;
+  day: string;
+  month: string;
+  year: string;
   comments?: Comment[];
   likes?: string[];
   completed?: boolean;
