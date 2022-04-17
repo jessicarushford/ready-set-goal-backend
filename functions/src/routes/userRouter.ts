@@ -88,7 +88,7 @@ userRouter.put("/lastLogin/:uid", async (req, res) => {
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
-    const lastLogin = `${month}${day}${year}`;
+    const lastLogin = `${month}.${day}.${year}`;
     const client = await getClient();
     const result = await client
       .db()
