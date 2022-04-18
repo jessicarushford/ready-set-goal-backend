@@ -55,22 +55,6 @@ goalRouter.get("/details/:id", async (req, res) => {
   }
 });
 
-//get by uid to see the goals in other user's page
-// goalRouter.get("/:uid", async (req, res) => {
-//   try {
-//     const uid: string = req.params.uid;
-//     const client = await getClient();
-//     const result = await client
-//       .db()
-//       .collection<Goal>("goals")
-//       .find({ uid: uid as string })
-//       .toArray();
-//     res.json(result);
-//   } catch (err) {
-//     errorResponse(err, res);
-//   }
-// });
-
 //add a goal
 goalRouter.post("/", async (req, res) => {
   try {
