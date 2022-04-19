@@ -153,6 +153,27 @@ goalRouter.put("/new-comment/:id", async (req, res) => {
   }
 });
 
+//Delete comment
+goalRouter.put("/:id/delete-comment/:uid", async (req, res) => {
+  try {
+    const id: string = req.params.id;
+    const uid: string = req.params.uid;
+    const client = await getClient();
+    const result = await client
+      .db()
+      .collection<Goal>("goals")
+      .updateOne({ _id: new ObjectId(id) }, { $pull: { comments: { uid } } });
+    if (result.modifiedCount) {
+      res.sendStatus(200);
+    } else {
+      res.status(404);
+      res.send(`ID ${id} was not found`);
+    }
+  } catch (err) {
+    errorResponse(err, res);
+  }
+});
+
 goalRouter.put("/completed/:id", async (req, res) => {
   try {
     const id: string = req.params.id;
