@@ -10,5 +10,5 @@ app.use(cors());
 app.use(express.json());
 app.use("/goals", goalRouter);
 app.use("/users", userRouter);
-app.use("/", zenRouter);
+app.use("/quotes", zenRouter);
 export const api = functions.https.onRequest(app);
