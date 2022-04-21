@@ -84,12 +84,7 @@ userRouter.put("/:userUid/friends/:friendUid", async (req, res) => {
 userRouter.put("/lastLogin/:uid", async (req, res) => {
   try {
     const uid: string = req.params.uid;
-    const date = new Date();
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    const lastLogin = `${month}.${day}.${year}`;
-    console.log(date);
+    const lastLogin = req.body;
     const client = await getClient();
     const result = await client
       .db()
