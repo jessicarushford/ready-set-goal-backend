@@ -84,12 +84,12 @@ userRouter.put("/:userUid/friends/:friendUid", async (req, res) => {
 userRouter.put("/lastLogin/:uid", async (req, res) => {
   try {
     const uid: string = req.params.uid;
-    const lastLogin = req.body;
+    const body = req.body;
     const client = await getClient();
     const result = await client
       .db()
       .collection<User>("users")
-      .updateOne({ uid }, { $set: { lastLogin } });
+      .updateOne({ uid }, { $set: { lastLogin: body.lastLogin } });
     if (result.modifiedCount) {
       res.sendStatus(200);
     } else {
